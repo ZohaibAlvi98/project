@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 var crypto = require('crypto');
-
+const jwt = require('jsonwebtoken')
 
 // const UserService = require('./user.service');
 const UserModel = require('./user.model'); 
@@ -51,6 +51,53 @@ exports.create = function(req,res){
             }
            
             
+        })
+    }catch(e){
+        res.send({
+            success: false,
+            message: e.message
+        })
+    } 
+}
+
+exports.login = async function(req, res){
+    try{
+        console.log(req.params)
+        let {email, password} = req.body
+        console.log(req.body)
+        await UserModel.findOne({
+            email
+        }, (err,user)=>{
+            if(err){
+                res.send({
+                    success: false,
+                    message: err
+                })    
+            }
+            if(user!=null){
+                
+                if(user.authenticate(password)){
+                    const token = jwt.sign({
+                        email: user.email,
+                        userId: user._id
+                    }, 'car-parked-app-@Secret@12', {
+                        expiresIn: "2 days"
+                    })
+                   res.send({success: true, token:token, user, message: 'Successfull Login'})
+                   
+                }else{
+                    res.send({
+                        success: false,
+                        message: "Incorrect password."
+                    })
+                }
+            }else{
+                
+                res.send({
+                    success: false,
+                    message: "User not found"
+                })
+            }
         })
     }catch(e){
         res.send({
