@@ -3,6 +3,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var crypto = require('crypto');
+var uniqueValidator = require('mongoose-unique-validator');
 var authTypes = ['github', 'twitter', 'facebook', 'google'];
 
 var mongooseTypes = require("mongoose-types"); //for valid email and url
@@ -10,10 +11,33 @@ mongooseTypes.loadTypes(mongoose, "email");
 var Email = mongoose.SchemaTypes.Email;
 
 var UserSchema = new Schema({
-    name:{
+    firstName:{
         lowercase:true,
         type:String,
         required: true
+    },
+    lastName:{
+        lowercase:true,
+        type:String,
+        required: true
+    },
+    dateOfBirth:{
+        type: String
+    },
+    phoneNo:{
+        type: String,
+        required: true,
+        unique: true
+    },
+    liecenseNo:{
+        type: String,
+        required: true,
+        unique: true
+    },
+    carRegistration:{
+        type: String,
+        required: true,
+        unique: true
     },
     salt:String,
     role: String,
@@ -41,6 +65,8 @@ var UserSchema = new Schema({
 /**
  * Virtuals
  */
+
+ UserSchema.plugin(uniqueValidator, { message: '{PATH} already exists!' });
 UserSchema
     .virtual('password')
     .set(function(password) {

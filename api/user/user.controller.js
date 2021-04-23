@@ -14,7 +14,7 @@ const UserModel = require('./user.model');
 
 
 function handleError(res,error,code){
-    res.status(code).send({success: false, message:error.message});
+    res.status(code).send({success: false, message:error.message.split(',')[0]});
 }
 
 exports.create = function(req,res){
@@ -38,7 +38,14 @@ exports.create = function(req,res){
             }else if(error.message == 'Invalid password'){
                 res.send({message: 'Invalid password', success: false})
             }
-            if(error.code == 11000)res.status(422).send(['This email address is already be in use'])
+            // if(error.code == 11000){
+            //     console.log(error.keyValue)
+            //     if(error.keyValue == 'liecenseNo'){
+            //         res.send({err: error})
+            //     }
+            //     // res.status(422).send(['This email address is already be in use'])
+               
+            // }
             else{
                 handleError(res,error,500);
             }
