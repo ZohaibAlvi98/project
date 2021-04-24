@@ -21,18 +21,21 @@ exports.location = async(req,res)=>{
      
     if(moment(now, "DD.MM.YYYY HH:mm").isBefore(moment(loc.duration, "DD.MM.YYYY HH:mm"))){
        
-        console.log(moment.utc(moment(loc.duration,"DD/MM/YYYY HH:mm:ss").diff(moment(now,"DD/MM/YYYY HH:mm:ss"))).local().format("HH:mm:ss"))
-        const time = moment.utc(moment(loc.duration,"DD/MM/YYYY HH:mm:ss").diff(moment(now,"DD/MM/YYYY HH:mm:ss"))).local().format("HH:mm:ss")
+       
+        const time = moment.duration(moment.utc(moment(loc.duration,"DD/MM/YYYY HH:mm:ss").diff(moment(now,"DD/MM/YYYY HH:mm:ss"))))
+       let milli = time.asMilliseconds()
+       
         res.send({
             success: true,
             location: loc,
-            remaining: time,
-            message: `Time is Remaining: ${time}`
+            milliseconds: milli,
  
         })
       }else{
        res.send({
            success: true,
+           location: loc,
+           milliseconds: "0",
            message: 'Time is up'
 
        })
