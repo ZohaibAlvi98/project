@@ -21,7 +21,7 @@ exports.location = async(req,res)=>{
      
     if(moment(now, "DD.MM.YYYY HH:mm").isBefore(moment(loc.duration, "DD.MM.YYYY HH:mm"))){
        
-        console.log(moment.utc(moment(loc.duration,"DD/MM/YYYY HH:mm:ss").diff(moment(now,"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss"))
+        console.log(moment.utc(moment(loc.duration,"DD/MM/YYYY HH:mm:ss").diff(moment(now,"DD/MM/YYYY HH:mm:ss"))).local().format("HH:mm:ss"))
         const time = moment.utc(moment(loc.duration,"DD/MM/YYYY HH:mm:ss").diff(moment(now,"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss")
         res.send({
             success: true,
