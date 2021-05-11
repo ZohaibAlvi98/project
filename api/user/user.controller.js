@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken')
 
 // const UserService = require('./user.service');
 const UserModel = require('./user.model'); 
+const userSessionModel = require('../userSession/userSession.model');
 // const UtilService = require('../utility/util');
 // const htmlTemplateService = require('../utility/htmltemplates');
 // const UserSession = require('../userSession/userSession.model'); 
@@ -77,13 +78,17 @@ exports.login = async function(req, res){
             if(user!=null){
                 
                 if(user.authenticate(password)){
-                    const token = jwt.sign({
-                        email: user.email,
-                        userId: user._id
-                    }, 'car-parked-app-@Secret@12', {
-                        expiresIn: "2 days"
+                    // const token = jwt.sign({
+                    //     email: user.email,
+                    //     userId: user._id
+                    // }, 'car-parked-app-@Secret@12', {
+                    //     expiresIn: "2 days"
+                    // })
+                    userSessionModel.create({user: user._id}, (err, raw)=>{ 
+                        
+                        res.send({success: true, token: raw._id, user, message: 'Successfull Login'})
                     })
-                   res.send({success: true, token:token, user, message: 'Successfull Login'})
+                   
                    
                 }else{
                     res.send({
