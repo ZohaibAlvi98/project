@@ -111,3 +111,21 @@ exports.login = async function(req, res){
         })
     } 
 }
+
+
+exports.users = async function(req, res){
+    try{
+        await UserModel.find({},async(err,users)=>{
+            res.send({
+                users:users
+            })
+
+    })
+    }catch(e){
+        res.send({
+            success: false,
+            message: e.message
+        })
+    } 
+
+}

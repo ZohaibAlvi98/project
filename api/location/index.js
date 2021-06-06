@@ -11,4 +11,5 @@ router.get('/get',auth.isUserAuthenticated(), controller.location);
 router.post('/create',auth.isUserAuthenticated(), controller.createLocation);
 
 
+
 module.exports = router;

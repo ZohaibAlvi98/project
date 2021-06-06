@@ -10,6 +10,7 @@ var moment = require('moment'); // require
 
 // const UserService = require('./user.service');
 const LocationModel = require('./location.model'); 
+const slotsModel = require('../slots/slots.model');
 
 
 exports.location = async(req,res)=>{
@@ -89,12 +90,20 @@ exports.createLocation = async(req,res)=>{
        req.body['userId'] = req.userData.userId
        const hours = req.body['duration'].split(':')[0]
        const minute = req.body['duration'].split(':')[1]
-    console.log(req.userData.userId)
+   
     //    var now  = "04/09/2013 15:00:00";
 var then = "04/09/2013 18:20:30";
 const now = moment()
 
        req.body['duration'] = moment().add({'hours':hours,'minutes': minute}).format("DD/MM/YYYY HH:mm:ss")
+       var time =  moment().add({'hours':hours,'minutes': minute})
+       await slotsModel.findOne({time : { $lt : moment() },slotName: req.body.slotName},async(err,slot)=>{
+        if(slot!= null){
+            slot.time = time
+            slot.userId = req.body['userId']
+            slot.vaccant = false
+            await slot.save();
+        }
        
     
         await LocationModel.create(req.body,async(err,loc)=>{
@@ -103,6 +112,7 @@ const now = moment()
                 location:loc
             })
         })
+    })
    }catch(e){
        res.send({
            success: false,
